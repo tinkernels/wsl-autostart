@@ -1,5 +1,3 @@
-/etc/init.d/cron
+/etc/init.d/postgresql
 /etc/init.d/ssh
-/etc/init.d/mysql
-/etc/init.d/apache2
-/etc/init.d/memcached
+/etc/init.d/docker

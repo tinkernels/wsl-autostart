@@ -1,7 +1,16 @@
 @echo off
-REM Goto the detect section.
-goto lxssDetect
 
+SET is_start_stop_service=F
+if "%1"=="start" SET is_start_stop_service=T
+if "%1"=="stop" SET is_start_stop_service=T
+if "%is_start_stop_service%"=="T" (
+    REM Goto the detect section.
+    goto lxssDetect
+) else (
+    REM Goto the net_alter section.
+    goto net_alter
+)
+ 
 :lxssRestart
     REM ReStart the LxssManager service
     net stop LxssManager
@@ -31,6 +40,14 @@ goto lxssDetect
 
     REM Start services in the WSL
     REM Define the service commands in commands.txt.
-    for /f %%i in (%~dp0commands.txt) do (wsl sudo %%i %*)
+::  for /f %%i in (%~dp0commands.txt) do (wsl sudo %%i %*)
+    for /f %%i in (%~dp0commands.txt) do (wsl %%i %*)
+    goto net_alter
+
+:net_alter
+    REM Alter network
+    SET net_ps1_path=%~dp0net-alter.ps1
+    PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%net_ps1_path%'";
+    goto end
 
 :end
